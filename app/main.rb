@@ -12,9 +12,9 @@ require 'dm-validations'
 require 'dm-migrations'
 require 'pp'
 
-#DataMapper.setup(:default, 'postgres://qbestvanfyprfa:2mg-TW896fJalG_1_UR8bV0v9x@ec2-107-21-107-194.compute-1.amazonaws.com:5432/d9v8ggrp2ui4g4')
+DataMapper.setup(:default, 'postgres://zaomlqcbmoxdns:JALlGtM8E4-w1W3H5AlKlWkRom@ec2-23-21-203-9.compute-1.amazonaws.com:5432/dbq4cvll6vm2o9')
 #DataMapper.setup(:default, 'postgres://julienbordellier@localhost/requireris')
-DataMapper.setup(:default, "sqlite://#{Dir.pwd}/database.db")
+#DataMapper.setup(:default, "sqlite://#{Dir.pwd}/database.db")
 DataMapper.finalize
 
 class Key
@@ -97,6 +97,10 @@ get '/otp' do
 		otps << totp_gen(k.value)
 	end
 	otps.to_json
+end
+
+get '/otp_mobile/:otp' do
+    totp_gen(params[:otp])
 end
 
 get '/delete/:id' do
