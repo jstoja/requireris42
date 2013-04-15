@@ -3,9 +3,9 @@ require 'json'
 require 'openssl'
 require 'sinatra'
 require 'rubygems'
-#require 'pg'
+require 'pg'
 #require 'data_mapper'
-#require 'dm-postgres-adapter'
+require 'dm-postgres-adapter'
 require 'dm-core'  
 require 'dm-timestamps'
 require 'dm-validations'
@@ -54,7 +54,7 @@ get '/login' do
 end
 
 post '/login' do
-	user = Account.all(:mail => params[:mail], :password => OpenSSL::Digest.digest("MD5", params[:password]))
+	user = Account.all(:mail => params[:mail], :password => Base32.encode(OpenSSL::Digest.digest("MD5", params[:password])))
 	if user != [] then
 		session[:user] = user.first.mail
 		session[:account_id] = user.first.id
@@ -73,8 +73,8 @@ post '/register' do
 	DataMapper.finalize
 	@account = Account.create(
 		:mail 			=>	params[:mail],
-		:password		=>	OpenSSL::Digest.digest("MD5", params[:password])
-	)
+		:password		=>	Base32.encode(OpenSSL::Digest.digest("MD5", params[:password]))
+    )
 	session[:user] = params[:mail]
 	session[:account_id] = @account.id
 	redirect to('/')
